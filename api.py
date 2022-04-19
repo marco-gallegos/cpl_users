@@ -11,6 +11,7 @@ from flask_cors import CORS
 from flask_restful import Api
 from flask_jwt_extended import (get_jwt_identity, jwt_required, JWTManager)
 import os
+from config.config import APP_CONFIG
 
 # controladores
 import controllers
@@ -26,12 +27,20 @@ jwt = JWTManager(app)
 
 
 # se pueden agregar rutas nativas de flask que regresen json
-@app.route("/protected", methods=["GET"])
+@app.route("/login", methods=["GET"])
 @jwt_required()
 def protected():
     # Access the identity of the current user with get_jwt_identity
     current_user = get_jwt_identity()
-    return jsonify(logged_in_as=current_user), 200
+    json = jsonify(logged_in_as=current_user)
+    print(json, type(json))
+    return json, 200\
+
+
+@app.route("/envs", methods=["GET"])
+@jwt_required()
+def envs():
+    return APP_CONFIG, 200
 
 
 # Setup the flask restful api
@@ -39,7 +48,7 @@ api = Api(app)
 
 # rutas resource de flask restful
 api.add_resource(controllers.HelloWorld, '/')
-api.add_resource(controllers.UserController, '/user')
+api.add_resource(controllers.UserController, '/users')
 api.add_resource(controllers.LoginController, '/login')
 
 

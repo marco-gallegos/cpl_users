@@ -4,37 +4,45 @@
 @Description
     user controller
 """
+from flask import request
 from flask_restful import Resource, reqparse
-from model.user import User
 import pendulum
+from repository.mongorepository.main_repository import get_user, generate_hash, store_user
 
 
 class UserController(Resource):
     parser = reqparse.RequestParser()
-    #TODO investigar el parametro type
+    # TODO investigar el parametro type
     parser.add_argument('name', help='the name field is required', required=True)
     parser.add_argument('lastname', help='the name field is required', required=True)
     parser.add_argument('email', help='the name field is required', required=True)
     parser.add_argument('password', help='the name field is required', required=True)
 
     def get(self):
-        users_query = User.select().dicts()
-        users = list()
-        for user in users_query:
-            if user['created_at']:
-                user['created_at'] = pendulum.instance(user['created_at']).to_datetime_string()
-            users.append(user)
-        #print(users)
-        return users
+        existing_user = get_user(request.args.get('email'))
+        existing_user.pop("password")
+        existing_user["_id"] = str(existing_user["_id"])
+        return existing_user
     
     def post(self):
         data = self.parser.parse_args()
 
-        new_user = User.create(
-            name = data['name'],
-            lastname = data['lastname'],
-            email = data['email'],
-            password = User.generate_hash(data['password'])
-        )
+        existing_user = get_user(data['email'])
 
-        return new_user
+        print(existing_user)
+
+        if existing_user:
+            return {'message': 'User already exists'}
+
+        user = {
+            "name": data['name'],
+            "lastname": data['lastname'],
+            "email": data['email'],
+            "password": generate_hash(data['password'])
+        }
+
+        new_user = store_user(user)
+        user.pop("password")
+        user.pop("_id")
+
+        return user
