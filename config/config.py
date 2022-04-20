@@ -13,7 +13,7 @@ import os
 # env_path = Path('.') / '../.env'
 env_path = dotenv.find_dotenv(usecwd=True)
 
-dotenv.load_dotenv(dotenv_path=env_path,verbose=True)
+dotenv.load_dotenv(dotenv_path=env_path, verbose=True)
 # load_dotenv(dotenv_path=env_path, verbose=False)
 
 app_name = os.getenv('APP_NAME') if os.getenv('APP_NAME') else 'apipython' 
