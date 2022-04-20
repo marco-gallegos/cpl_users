@@ -18,7 +18,6 @@ from flask_jwt_extended import (
 class LoginController(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('email', help='the name field is required', required=True)
-    parser.add_argument('age', help='the age field is required', required=True)
     parser.add_argument('password', help='the name field is required', required=True)
 
     #@jwt_required
