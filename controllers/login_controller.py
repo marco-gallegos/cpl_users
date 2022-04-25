@@ -27,16 +27,14 @@ class LoginController(Resource):
     def get(self):
         """this method returns the jwt identy, in this project jwt identity conatians user data."""
         current_user = get_jwt_identity()
-        json = jsonify(logged_in_as=current_user)
-        print(json, type(json))
-        return json, 200
+        return current_user, 200
     
     def post(self):
         """this method check user data and returns a jwt token with user data in the payload."""
         data = self.parser.parse_args()
         user = get_user(data['email'])
         user["_id"] = str(user["_id"])
-        print(user)
+        # print(user)
         serialized_user = user.copy()
         serialized_user.pop('password')
 

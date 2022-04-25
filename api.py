@@ -21,6 +21,8 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Setup the Flask-JWT-Extended extension
 app.config["JWT_SECRET_KEY"] = APP_CONFIG["APP_KEY"]
+jwt = JWTManager(app)
+
 
 # se pueden agregar rutas nativas de flask que regresen json
 # @app.route("/users/login", methods=["GET"])
