@@ -17,4 +17,5 @@ passlib
 peewee
 pendulum
 python-dotenv
+pytest
 pymongo

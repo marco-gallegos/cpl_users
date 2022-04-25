@@ -10,7 +10,7 @@ db = client.coppel
 new_user = {
     "name": "Marco",
     "age": "27",
-    "email": "ma_galeza@hotmail.com",
+    "email": "noexiste@hotmail.com.crazy",
     "password": "123456",
 }
 

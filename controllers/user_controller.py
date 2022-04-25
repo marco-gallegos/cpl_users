@@ -14,9 +14,10 @@ class UserController(Resource):
     parser = reqparse.RequestParser()
     # TODO investigar el parametro type
     parser.add_argument('name', help='the name field is required', required=True)
-    parser.add_argument('lastname', help='the name field is required', required=True)
+    # parser.add_argument('lastname', help='the name field is required', required=True)
     parser.add_argument('email', help='the name field is required', required=True)
     parser.add_argument('password', help='the name field is required', required=True)
+    parser.add_argument('age', help='the age field is required', required=True)
 
     def get(self):
         existing_user = get_user(request.args.get('email'))
@@ -36,7 +37,8 @@ class UserController(Resource):
 
         user = {
             "name": data['name'],
-            "lastname": data['lastname'],
+            # "lastname": data['lastname'],
+            "age": data['age'],
             "email": data['email'],
             "password": generate_hash(data['password'])
         }
