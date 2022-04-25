@@ -7,6 +7,7 @@ from repository.mongorepository.main_repository import db
 # * db string setup
 # * db conection
 
+
 def check_mongo_connection_string():
     assert APP_CONFIG["MONGO_URL"] is not None
 
