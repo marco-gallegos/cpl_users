@@ -2,11 +2,10 @@
 @Author Marco A. Gallegos
 @Date 2020/10/09
 @Description
-    login controller this controller make the login function
+    login controller this controller makes the login function
 """
 from flask_restful import Resource, reqparse
 from flask import jsonify
-# from model.user import User
 from repository.mongorepository.main_repository import get_user, verify_password
 
 from flask_jwt_extended import (
@@ -16,41 +15,40 @@ from flask_jwt_extended import (
 
 
 class LoginController(Resource):
+    """This controlLer handles the login and user authorization considering a JWT token.
+    this token is encrypted so consider use the same password in every microservice.
+    """
+
     parser = reqparse.RequestParser()
     parser.add_argument('email', help='the name field is required', required=True)
     parser.add_argument('age', help='the age field is required', required=True)
     parser.add_argument('password', help='the name field is required', required=True)
 
-    #@jwt_required
+    @jwt_required()
     def get(self):
-        #user = get_jwt_identity()
-        #print(user)
-        #json = jsonify(logged_in_as=user)
-        #print(json)
-        return {
-            'logged_in_as': {}
-        }
+        """this method returns the jwt identy, in this project jwt identity conatians user data."""
+        current_user = get_jwt_identity()
+        json = jsonify(logged_in_as=current_user)
+        print(json, type(json))
+        return json, 200
     
     def post(self):
+        """this method check user data and returns a jwt token with user data in the payload."""
         data = self.parser.parse_args()
-        # user = User.select().where(User.email == data['email']).get()
         user = get_user(data['email'])
         user["_id"] = str(user["_id"])
         print(user)
-        seriaized_user = user.copy()
-        seriaized_user.pop('password')
+        serialized_user = user.copy()
+        serialized_user.pop('password')
 
         if user:
             coincide_password = verify_password(data['password'], user['password'])
             if coincide_password:
-                access_token = create_access_token(identity=seriaized_user)
-                print(access_token)
-                refresh_token = create_refresh_token(identity=seriaized_user)
+                access_token = create_access_token(identity=serialized_user)
+                refresh_token = create_refresh_token(identity=serialized_user)
                 return {
                     'message': f"Logged in as {user['name']}",
                     'access_token': access_token,
                     'refresh_token': refresh_token
                 }
-            else:
-                return {'message': 'Wrong credentials'}
         return {'message': 'Wrong credentials'}
