@@ -6,6 +6,7 @@
     Main Api file
 """
 from config.config import APP_CONFIG
+from datetime import timedelta
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_restful import Api
@@ -21,6 +22,8 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Setup the Flask-JWT-Extended extension
 app.config["JWT_SECRET_KEY"] = APP_CONFIG["APP_KEY"]
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
+app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=10)
 jwt = JWTManager(app)
 
 
