@@ -12,9 +12,7 @@ from repository.mongorepository.main_repository import get_user, generate_hash, 
 
 class UserController(Resource):
     parser = reqparse.RequestParser()
-    # TODO investigar el parametro type
     parser.add_argument('name', help='the name field is required', required=True)
-    # parser.add_argument('lastname', help='the name field is required', required=True)
     parser.add_argument('email', help='the name field is required', required=True)
     parser.add_argument('password', help='the name field is required', required=True)
     parser.add_argument('age', help='the age field is required', required=True)
